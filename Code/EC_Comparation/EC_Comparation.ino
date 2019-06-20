@@ -1,16 +1,14 @@
-#include <SPI.h>
 #include <Ethernet.h>
 #include <PubSubClient.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
-#include <Wire.h>
+//#include <Wire.h>
 #include <Adafruit_ADS1015.h>
 #include <LiquidCrystal_I2C.h>
 
 #define ARDUINO_CLIENT "ProjectOasis"      // Client ID for Arduino pub/sub
 #define BROKER_ID "agrotech"            // Broker Username
 #define BROKER_PASS "Kd9dj]XX.{/4~%Lq" // Broker Password
-
 
 #define PUB_EC1 "ProjectOasis/EC1"         // MTTQ topic for EC1
 #define PUB_EC2 "ProjectOasis/EC2"         // MTTQ topic for EC2
@@ -30,13 +28,13 @@ float Voltage1, Voltage2;
 float TSvalue;
 
 // Networking details
-byte mac[]    = {  0x00, 0xAA, 0xBB, 0xCC, 0xDE, 0x02 };
+byte mac[] = {  0x00, 0xAA, 0xBB, 0xCC, 0xDE, 0x02 };
 
-IPAddress ip(192, 168, 0, 10);                           // Ethernet shield (W5100) IP address
-IPAddress server(192, 168, 0, 2);                       // MTTQ server IP address
+IPAddress ip( 192, 168, 0, 10 );                           // Ethernet shield (W5100) IP address
+IPAddress server( 192, 168, 0, 2 );                       // MTTQ server IP address
 
 EthernetClient ethClient;
-PubSubClient client(ethClient);
+PubSubClient client( ethClient );
 
 // Temp Sensor
 OneWire oneWire(pinTS);
@@ -75,14 +73,12 @@ void setup() {
 
 
 void loop() {
- if (!client.connected())
+if (!client.connected()) {
     reconnect();
-
-     ECvalue();
-     TSread();
-
-  if (millis() - lastMeasure > PUBLISH_DELAY)
-  {
+    }
+ECvalue();
+TSread();
+if (millis() - lastMeasure > PUBLISH_DELAY) {
       lastMeasure = millis();
       char tmpBuffer[20];
  
@@ -113,10 +109,10 @@ void loop() {
       lcd.setCursor(9,1);
       lcd.print (EC2);
   }
-  client.loop();
+client.loop();
 }
 
 void TSread(){
-  sensorTS.requestTemperatures();
-  TSvalue = sensorTS.getTempCByIndex(0);
-  }
+sensorTS.requestTemperatures();
+TSvalue = sensorTS.getTempCByIndex(0);
+}
