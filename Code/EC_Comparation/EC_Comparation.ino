@@ -17,7 +17,7 @@
 #define PUB_V1 "ProjectOasis/V1"         // MTTQ topic for V1
 #define PUB_V2 "ProjectOasis/V2"         // MTTQ topic for V2
 #define PUB_TS "ProjectOasis/TS"         // MTTQ topic for TS
-#define PUBLISH_DELAY 5000              // Publishing delay [ms]
+#define PUBLISH_DELAY 2000              // Publishing delay [ms]
 
 // Hardware setup details
 //const int pinEC1 = A1;
@@ -75,11 +75,12 @@ void setup() {
 
 
 void loop() {
- if (!client.connected())
-    reconnect();
+// if (!client.connected())
+//    reconnect();
 
      ECvalue();
      TSread();
+
 
   if (millis() - lastMeasure > PUBLISH_DELAY)
   {
@@ -98,20 +99,27 @@ void loop() {
       Serial.println(TSvalue);
              
       client.publish(PUB_EC1, dtostrf(EC1, 6, 2, tmpBuffer));
-      client.publish(PUB_EC2, dtostrf(EC2, 6, 2, tmpBuffer));
+//      client.publish(PUB_EC2, dtostrf(EC2, 6, 2, tmpBuffer));
       client.publish(PUB_V1, dtostrf(Voltage1, 6, 2, tmpBuffer));
-      client.publish(PUB_V2, dtostrf(Voltage2, 6, 2, tmpBuffer));          
+//      client.publish(PUB_V2, dtostrf(Voltage2, 6, 2, tmpBuffer));          
       client.publish(PUB_TS, dtostrf(TSvalue, 6, 2, tmpBuffer));
 
       lcd.clear();
       lcd.setCursor(0,0);
       lcd.print("EC1 :");
-      lcd.setCursor(9,0);
+      lcd.setCursor(7,0);
       lcd.print (EC1);
+      
       lcd.setCursor(0,1);
-      lcd.print("EC2 :");
+      lcd.print("V:");
+      lcd.setCursor(2,1);
+      lcd.print (Voltage1,3);
+
       lcd.setCursor(9,1);
-      lcd.print (EC2);
+      lcd.print ("T:");
+      lcd.setCursor(11,1);
+      lcd.print (TSvalue);
+      
   }
   client.loop();
 }

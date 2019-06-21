@@ -9,7 +9,7 @@ void ECvalue () {
   for (arrayPos = 0 ; arrayPos < arrayNum ; arrayPos++) {
    int16_t adc0 = ads.readADC_SingleEnded(0);
    float VoltageValue1 = adc0 * 0.1875 / 1000 ;
-   float VoltageValue2 = analogRead(pinEC2) * 5.0 / 1024;    
+   float VoltageValue2 = 5; //analogRead(pinEC2) * 5.0 / 1024;    
     Total1 += VoltageValue1;
     Total2 += VoltageValue2;    
     delay (20);
@@ -19,7 +19,7 @@ void ECvalue () {
     Average1 = Total1 / arrayNum;
     Average2 = Total2 / arrayNum;
     
-    EC1 = 2* Average1;
+    EC1 = 159.88* exp(0.564*Average1);
     EC2 = 2* Average2;
     Voltage1 = Average1;
     Voltage2 = Average2;
