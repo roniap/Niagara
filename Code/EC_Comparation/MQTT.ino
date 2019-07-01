@@ -2,23 +2,21 @@
 //---------------- MQTT Protocol Function ------------
 void reconnect()
 {
-  // Loop until reconnected
-  if (!client.connected()) {
-    Serial.print("Attempting MQTT connection ... ");
-    // Attempt to connect
-    if (client.connect(ARDUINO_CLIENT, BROKER_ID, BROKER_ID)) {
+
+  if (!client.connected()) {                                         // Loop until reconnected
+    Serial.print("MQTT connectin9 ... ");
+    if (client.connect(ARDUINO_CLIENT, BROKER_ID, BROKER_ID)) {      // Attempt to connect
       Serial.println("connected");
-      // (re)subscribe
-//      client.subscribe(SUB_LED);
+      //(re)subscribe
+      //client.subscribe(SUB_LED);
     } else {
-      Serial.print("Connection failed, state: ");
-      Serial.print(client.state());
-      Serial.println(", retrying in 5 seconds");
-      delay(5000); // Wait 5 seconds before retrying
+      Serial.print("Connection failed, retry ");
+      //Serial.print(client.state());
+      //Serial.println(", retrying in 0.5 seconds");
+      delay(500); // Wait 5 seconds before retrying
     }
   }
 }
- 
 // sub callback function
 void callback(char* topic, byte* payload, unsigned int length)
 {

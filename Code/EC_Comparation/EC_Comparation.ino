@@ -29,17 +29,15 @@ float TSvalue;
 
 // Networking details
 byte mac[] = {  0x00, 0xAA, 0xBB, 0xCC, 0xDE, 0x02 };
-
 IPAddress ip( 192, 168, 0, 10 );                           // Ethernet shield (W5100) IP address
 IPAddress server( 192, 168, 0, 2 );                       // MTTQ server IP address
-
 EthernetClient ethClient;
 PubSubClient client( ethClient );
+
 
 // Temp Sensor
 OneWire oneWire(pinTS);
 DallasTemperature sensorTS(&oneWire);
-
 // ADS
 Adafruit_ADS1115 ads(0x48);
 LiquidCrystal_I2C lcd(0x27, 16, 2);
@@ -49,25 +47,14 @@ long lastMeasure;
 
 void setup() {
   Serial.begin(9600);
-
-  // TS Setup
-  sensorTS.begin();
-
-  // ADS Setup
-  ads.begin();
-
-  // LCD Setup
-  lcd.init();
+  sensorTS.begin();     // TS Setup
+  ads.begin();       // ADS Setup
+  lcd.init();          // LCD Setup
   lcd.backlight();
-  
-  // MTTQ parameters
-  client.setServer(server, 1883);
+  client.setServer(server, 1883);   // MTTQ parameters
   client.setCallback(callback);
-
-  // Ethernet shield configuration
-  Ethernet.begin(mac, ip);
-
-  delay(1500); // Allow hardware to stabilize
+  Ethernet.begin(mac, ip); // Ethernet shield configuration
+  delay(1000); // Allow hardware to stabilize
   lastMeasure = millis();  
 }
 
@@ -84,19 +71,13 @@ if (millis() - lastMeasure > PUBLISH_DELAY) {
  
       Serial.print("[sensor data] EC1: ");
       Serial.print(EC1);
-      Serial.print(", EC2: ");
-      Serial.print(EC2);
       Serial.print(", Voltage1: ");
       Serial.print(Voltage1);      
-      Serial.print(", Voltage2: ");
-      Serial.print(Voltage2);
       Serial.print(", Temp: ");
       Serial.println(TSvalue);
              
       client.publish(PUB_EC1, dtostrf(EC1, 6, 2, tmpBuffer));
-      client.publish(PUB_EC2, dtostrf(EC2, 6, 2, tmpBuffer));
-      client.publish(PUB_V1, dtostrf(Voltage1, 6, 2, tmpBuffer));
-      client.publish(PUB_V2, dtostrf(Voltage2, 6, 2, tmpBuffer));          
+      client.publish(PUB_V1, dtostrf(Voltage1, 6, 2, tmpBuffer));         
       client.publish(PUB_TS, dtostrf(TSvalue, 6, 2, tmpBuffer));
 
       lcd.clear();
