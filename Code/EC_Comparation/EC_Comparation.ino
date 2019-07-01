@@ -6,6 +6,7 @@
 #include <Adafruit_ADS1015.h>
 #include <LiquidCrystal_I2C.h>
 
+
 #define ARDUINO_CLIENT "ProjectOasis"      // Client ID for Arduino pub/sub
 #define BROKER_ID "agrotech"            // Broker Username
 #define BROKER_PASS "Kd9dj]XX.{/4~%Lq" // Broker Password
@@ -17,11 +18,7 @@
 #define PUB_TS "ProjectOasis/TS"         // MTTQ topic for TS
 #define PUBLISH_DELAY 5000              // Publishing delay [ms]
 
-// Hardware setup details
-//const int pinEC1 = A1;
-const int pinEC2 = A2;
-const int pinTS = A0;
-
+#define pinTS A0
 // Value
 float EC1, EC2;
 float Voltage1, Voltage2;
@@ -51,10 +48,12 @@ void setup() {
   ads.begin();       // ADS Setup
   lcd.init();          // LCD Setup
   lcd.backlight();
+  
   client.setServer(server, 1883);   // MTTQ parameters
   client.setCallback(callback);
+  delay(500);
   Ethernet.begin(mac, ip); // Ethernet shield configuration
-  delay(1000); // Allow hardware to stabilize
+  delay(1500); // Allow hardware to stabilize
   lastMeasure = millis();  
 }
 
@@ -67,7 +66,6 @@ ECvalue();
 TSread();
 if (millis() - lastMeasure > PUBLISH_DELAY) {
       lastMeasure = millis();
-      char tmpBuffer[20];
  
       Serial.print("[sensor data] EC1: ");
       Serial.print(EC1);
@@ -75,11 +73,11 @@ if (millis() - lastMeasure > PUBLISH_DELAY) {
       Serial.print(Voltage1);      
       Serial.print(", Temp: ");
       Serial.println(TSvalue);
-             
-      client.publish(PUB_EC1, dtostrf(EC1, 6, 2, tmpBuffer));
-      client.publish(PUB_V1, dtostrf(Voltage1, 6, 2, tmpBuffer));         
-      client.publish(PUB_TS, dtostrf(TSvalue, 6, 2, tmpBuffer));
-
+    
+      pub(PUB_EC1,stringConv(EC1)+"#");
+      pub(PUB_V1,stringConv(Voltage1));
+      pub(PUB_TS,stringConv(TSvalue)+" C"+" #");
+      
       lcd.clear();
       lcd.setCursor(0,0);
       lcd.print("EC1 :");

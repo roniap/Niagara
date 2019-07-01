@@ -15,8 +15,13 @@ void ECvalue () {
 
   if ( arrayPos == arrayNum ) {
     Average1 = Total1 / arrayNum;
-    
     EC1 = 2* Average1;
     Voltage1 = Average1;
   }
+}
+
+String stringConv(float dataFloat){
+  char tmpBuffer[20];
+  dtostrf(dataFloat, 6, 2, tmpBuffer);
+  return tmpBuffer;
 }
