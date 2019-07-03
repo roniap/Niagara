@@ -4,7 +4,7 @@ void ECvalue () {
   float Total1 = 0, Average1 = 0, Total2 = 0, Average2 = 0;
   int arrayPos;
   int arrayNum = 50;
-  uint16_t adc0; 
+  int16_t adc0; 
 
   for ( arrayPos = 0 ; arrayPos < arrayNum ; arrayPos++ ){
    adc0 = ads.readADC_SingleEnded(0);

@@ -53,7 +53,7 @@ void setup() {
   client.setCallback(callback);
   delay(500);
   Ethernet.begin(mac, ip); // Ethernet shield configuration
-  delay(1500); // Allow hardware to stabilize
+  delay(1000); // Allow hardware to stabilize
   lastMeasure = millis();  
 }
 
@@ -75,18 +75,20 @@ if (millis() - lastMeasure > PUBLISH_DELAY) {
       Serial.println(TSvalue);
     
       pub(PUB_EC1,stringConv(EC1)+"#");
-      pub(PUB_V1,stringConv(Voltage1));
-      pub(PUB_TS,stringConv(TSvalue)+" C"+" #");
+      pub(PUB_V1,stringConv(Voltage1)+"#");
+      pub(PUB_TS,stringConv(TSvalue)+"#");
       
       lcd.clear();
       lcd.setCursor(0,0);
-      lcd.print("EC1 :");
-      lcd.setCursor(9,0);
+      lcd.print("EC1: ");
+      lcd.setCursor(4,0);
       lcd.print (EC1);
+      lcd.setCursor(8,0);
+      lcd.print(" V:");
+      lcd.print(Voltage1);
       lcd.setCursor(0,1);
-      lcd.print("EC2 :");
-      lcd.setCursor(9,1);
-      lcd.print (EC2);
+      lcd.print("Temp :");
+      lcd.print (TSvalue);
   }
 client.loop();
 }
