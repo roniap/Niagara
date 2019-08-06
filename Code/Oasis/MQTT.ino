@@ -4,9 +4,9 @@ void reconnect()
 {
 
   if (!client.connected()) {                                         // Loop until reconnected
-    Serial.print("MQTT connectin9 ... ");
-    //if (client.connect(ARDUINO_CLIENT, BROKER_ID, BROKER_ID)) {      // Attempt to connect
-    if (client.connect(ARDUINO_CLIENT)){
+    Serial.print("MQTT connecting ... ");
+    if (client.connect(ARDUINO_CLIENT, BROKER_ID, BROKER_PASS)) {      // Attempt to connect
+//    if (client.connect(ARDUINO_CLIENT)){
       Serial.println("connected");
       //(re)subscribe
       //client.subscribe(SUB_LED);
@@ -53,4 +53,11 @@ void sub(String Data1)
   Data1.toCharArray(charData1,Data1.length()+1);
   client.subscribe(charData1);
   //free(charData);
+}
+
+
+String stringConv(float dataFloat){
+  char tmpBuffer[20];
+  dtostrf(dataFloat, 6, 2, tmpBuffer);
+  return tmpBuffer;
 }
