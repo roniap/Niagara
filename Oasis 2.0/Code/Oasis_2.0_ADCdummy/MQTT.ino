@@ -2,11 +2,9 @@
 
 void MQTTprocess(String dataSub) {
   int total = dataSub.indexOf('#');
-  String keyword, s_value;
-  int m0 = dataSub.indexOf(';');
+  String keyword = "";
+  keyword = dataSub.substring(0, total);
 
-  keyword = dataSub.substring(0, m0);
-  dataSub = dataSub.substring(m0 + 1, total);
 
   if (keyword == "Ph_Read") {
     pH_read ();
@@ -24,7 +22,6 @@ void MQTTprocess(String dataSub) {
 
   else if (keyword == "TDS_Read") {
     TDS_read ();
-
     Feedback = device_ip;
     Feedback += ';';
     Feedback += keyword;
@@ -64,7 +61,7 @@ void MQTTprocess(String dataSub) {
     reply(Feedback);
   }
 
-    else  if (keyword == "DHT_Read") {
+  else  if (keyword == "DHT_Read") {
     DHT_read();
 
     Feedback = device_ip;
@@ -75,13 +72,11 @@ void MQTTprocess(String dataSub) {
     Feedback += ';';
     Feedback += temperature;
     Feedback += ';';
-    Feedback += humidity;    
+    Feedback += humidity;
     Feedback += '#';
     reply(Feedback);
- 
+
   }
-  
-  keyword = "";
 }
 
 
@@ -95,12 +90,34 @@ void reply(String data) {
 
 
 //=============================================
+void PubSub_Convert() {
+  device_ip.toCharArray(c_device_ip, 20);
+
+  String subs;
+  subs = "Hydroponik";
+  subs += "/";
+  subs += "Command";
+  subs += "/";
+  subs += device_ip;
+  subs.toCharArray(c_subs, 40);
+
+  String pubs;
+  pubs = "Hydroponik";
+  pubs += "/";
+  pubs += "Reply";
+  pubs += "/";
+  pubs += device_ip;
+  pubs.toCharArray(c_pubs, 40);
+}
+
+
+//=============================================
 void reconnect()
 {
   if (!client.connected()) {                                         // Loop until reconnected
     Serial.print("MQTT connecting ... ");
-    if (client.connect(ARDUINO_CLIENT, BROKER_ID, BROKER_PASS)) {      // Attempt to connect
-      //  if (client.connect(ARDUINO_CLIENT)){
+//    if (client.connect(ARDUINO_CLIENT, BROKER_ID, BROKER_PASS)) {      // Attempt to connect
+        if (client.connect(ARDUINO_CLIENT)){
       Serial.println("connected");
       client.subscribe(c_subs);
 
@@ -121,16 +138,17 @@ void callback(char* topic, byte * payload, unsigned int length)
   Serial.print(topic);
   Serial.print("] ");
   char message[length + 1] = "";
-  for (int i = 0; i < length; i++)
+  for (int i = 0; i < length; i++) {
     message[i] = (char)payload[i];
-  dataSub += (char)payload[i];
+    dataSub += (char)payload[i];
+  }
   message[length] = '\0';
   Serial.println(message);
 
   MQTTprocess(dataSub);
 }
 
-
+/*
 //=============================================
 void pub(String topic, String Data)
 {
@@ -151,3 +169,4 @@ String stringConv(float dataFloat) {
   dtostrf(dataFloat, 6, 2, tmpBuffer);
   return tmpBuffer;
 }
+*/

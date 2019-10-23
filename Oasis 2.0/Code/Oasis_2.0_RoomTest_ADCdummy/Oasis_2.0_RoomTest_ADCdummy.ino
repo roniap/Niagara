@@ -17,7 +17,7 @@
 #define PUB_DHThum "Oasis/DHThum"         // MTTQ topic for DHThum
 #define PUB_pH "Oasis/pH"         // MTTQ topic for pH
 #define PUB_VpH "Oasis/VpH"         // MTTQ topic for pH
-#define PUBLISH_TIMER 60000              // Publishing delay [ms]
+#define PUBLISH_TIMER 20000              // Publishing delay [ms]
 
 // Sensor Pin
 #define DHTpin 9
@@ -52,7 +52,7 @@ long last_LCD;
 long timer_LCD = 5000;
 long last_MQTT;
 long last_Serial;
-long timer_Serial = 1000;
+long timer_Serial = 5000;
 
 void setup() {
 
@@ -85,9 +85,9 @@ void loop() {
   if (!client.connected()) {
     reconnect();
   }
-  client.loop();
-
-  Serialprint ();
-  LCDprint ();
   MQTTpub();
+
+//    LCDprint ();
+  Serialprint ();
+    client.loop();
 }

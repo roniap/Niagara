@@ -36,7 +36,7 @@ void DHT_read () {
 void TDS_read () {
   float total = 0, average = 0;
   int arrayPos;
-  int arrayNum = 1000;
+  int arrayNum = 200;
 
 
   for ( arrayPos = 0 ; arrayPos < arrayNum ; arrayPos++ ) {
@@ -51,7 +51,7 @@ void TDS_read () {
     average = total / arrayNum;
 
     TDSvolt = average;
-    TDS = 716.69 * TDSvolt - 680.65;    // Change with TDS Equation
+    TDS = 1617.9* TDSvolt - 285.26;    // Change with TDS Equation
   }
 
   if (TDSvolt < 0.9) {
@@ -67,7 +67,7 @@ void TDS_read () {
 void pH_read () {
   float total = 0, average = 0;
   int arrayPos;
-  int arrayNum = 1000;
+  int arrayNum = 5;
   long adcValue = 0;
 
   MCP342x::Config status;
@@ -77,7 +77,7 @@ void pH_read () {
                                      MCP342x::resolution18, MCP342x::gain1,
                                      1000000, adcValue, status);
 
-    float voltageValue = adcValue * 0.1875 / 1000 ; // Ganti
+    float voltageValue = adcValue * 2.048 / 131071 ; // Ganti
     total += voltageValue;
   }
 
@@ -86,6 +86,6 @@ void pH_read () {
     average = total / arrayNum;
 
     pHvolt = average;
-    pH = 716.69 * pHvolt - 680.65;    // Change with TDS Equation
+    pH = pH = 1617.9 * pHvolt - 285.26;    // Change with pH Equation
   }
 }

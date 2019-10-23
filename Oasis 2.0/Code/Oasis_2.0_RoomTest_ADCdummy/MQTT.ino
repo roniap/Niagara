@@ -5,7 +5,7 @@ void MQTTpub() {
     TDS_read ();
     pH_read ();
     DHT_read ();
-
+client.publish("outTopic","hello world");
     pub(PUB_TDS, stringConv(TDS) + "#");
     pub(PUB_VTDS, stringConv(TDSvolt) + "#");
     pub(PUB_DHTtemp, stringConv(temperature) + "#");
@@ -13,6 +13,8 @@ void MQTTpub() {
     pub(PUB_pH, stringConv(pH) + "#");
     pub(PUB_VpH, stringConv(pHvolt) + "#");
     last_MQTT = millis();
+
+    Serial.println ("Topics Published");
   }
 }
 
@@ -21,14 +23,14 @@ void reconnect()
 {
   if (!client.connected()) {                                         // Loop until reconnected
     Serial.print("MQTT connecting ... ");
-//    if (client.connect(ARDUINO_CLIENT, BROKER_ID, BROKER_PASS)) {      // Attempt to connect
-  if (client.connect(ARDUINO_CLIENT)){
+    //    if (client.connect(ARDUINO_CLIENT, BROKER_ID, BROKER_PASS)) {      // Attempt to connect
+    if (client.connect(ARDUINO_CLIENT)) {
       Serial.println("connected");
-      
+
       //(re)subscribe
       //client.subscribe(SUB_LED);
 
-      
+
     } else {
       Serial.print("Connection failed");
       //Serial.print(client.state());
@@ -53,21 +55,21 @@ void callback(char* topic, byte* payload, unsigned int length)
 
 
 //=============================================
-void pub(String topic,String Data)
-{  
-  if(client.connected()){
+void pub(String topic, String Data)
+{
+  if (client.connected()) {
     char charData[120];
     char charIP[50];
-    memset(charData,'\n',sizeof(charData));
-    memset(charIP,'\n',sizeof(charIP));
-    topic.toCharArray(charIP,topic.length()+1);
-    Data.toCharArray(charData,Data.length()+1);
-    client.publish(charIP,charData);
-    }
+    memset(charData, '\n', sizeof(charData));
+    memset(charIP, '\n', sizeof(charIP));
+    topic.toCharArray(charIP, topic.length() + 1);
+    Data.toCharArray(charData, Data.length() + 1);
+    client.publish(charIP, charData);
+  }
 }
 
 //=============================================
-String stringConv(float dataFloat){
+String stringConv(float dataFloat) {
   char tmpBuffer[20];
   dtostrf(dataFloat, 6, 2, tmpBuffer);
   return tmpBuffer;
