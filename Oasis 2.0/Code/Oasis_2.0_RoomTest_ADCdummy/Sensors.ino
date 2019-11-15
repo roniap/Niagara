@@ -9,7 +9,6 @@ void DHT_read () {
     Serial.println(F("Failed to read from DHT sensor!"));
     return;
   }
-
   float  hic = dht.computeHeatIndex(t, h, false);
 
   temperature = hic;
@@ -21,7 +20,7 @@ void DHT_read () {
 void TDS_read () {
   float total = 0, average = 0;
   int arrayPos;
-  int arrayNum = 1000;
+  int arrayNum = 200;
 
 
   for ( arrayPos = 0 ; arrayPos < arrayNum ; arrayPos++ ) {
@@ -52,7 +51,7 @@ void TDS_read () {
 void pH_read () {
   float total = 0, average = 0;
   int arrayPos;
-  int arrayNum = 1000;
+  int arrayNum = 5;
   long adcValue = 0;
 
   MCP342x::Config status;
@@ -62,7 +61,7 @@ void pH_read () {
                                      MCP342x::resolution18, MCP342x::gain1,
                                      1000000, adcValue, status);
 
-    float voltageValue = adcValue * 0.1875 / 1000 ; // Ganti
+    float voltageValue = adcValue * 2.048 / 131071 ; // Ganti
     total += voltageValue;
   }
 
